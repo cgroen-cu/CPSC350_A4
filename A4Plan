@@ -1,0 +1,51 @@
+Build Doubly Linked List
+Build Queue Addon
+
+Classes
+1. Queue for arrivals waiting
+    - window needs to be available for queue exit 
+2. Class for students
+     - Holds arrival time
+     - Holds processing time
+     - When new student is created:
+       - Constructor takes in processing time and arrival time
+       - calls statistics using inputed processing time
+     - method to lower student time (used in each game loop)
+3. Class for windows
+    - holds open or closed state (bool)
+    - holds student class
+    - Holds idle time
+      - Method to increment idle time - each round run loop checks if window is idle
+    - Method to change window state
+      - when used, statistics class is called to calculate in the idle time statistics
+4. Class to do running. 
+    - Holds 1 big queue of windows with size of total windows
+    - A loop runs, 
+      - Checks input file - if input file's next time = current loop iteration
+        - reads the number of students arriving
+        - Goes through another line for every student 
+           - creating a new student with the processing time from that line 
+      - Checks front of queue if a student/window processing time is 0 
+        - if so removes/pops
+        - checks front again until processing time != 0
+      - Checks if any window is open(IE queue is not full) 
+        - if, so adds student.
+      - traverses through the queue 
+        - Decreasing processing time by 1
+    - When a new student arrives at window, it is sorted into the queue based on time left. So the lowest time is always at top of queue.
+      - So, it creates a new node, and starts at the most time and if it has less time, moves up 1, until it finds a student with less time left. Then it is inserted behind it.
+    - Then each loop traverses through window, and popping any that finish their time. 
+5. Class for fileIO
+6. Maybe a class for calculating the statistics through File IO
+    - So each loop, run class reads through the next file lines. 
+    - While reading through the lines, calls statistics class to calculate statistics. 
+      - Calculates average wait (holds number of students and their sum of time, then divides)
+      - Calculates median, list holding wait times, new additions are sorted in, the median takes the middle node. 
+      - Calculates longest wait - if new data > old, then data = old
+      - Number of students with wait over 10 - if wait > 10, num10++
+    - Next is window idle statistics, these are called upon within the window class
+      - Window idle time is counted in the windows
+      - When they are no longer idle, they call the statistics class to calculate
+      - mean window idle time - window idle ++, idleSum+=idleTime, divide 
+      - longest window idle time - if new idle time > old then new = old
+      - number of windows idle over 5 min - if time = 10 then static variable ++ 
