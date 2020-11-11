@@ -14,6 +14,7 @@ Classes
 3. Class for windows
     - holds open or closed state (bool)
     - holds student class
+      - Method to change student (when changing states)
     - Holds idle time
       - Method to increment idle time - each round run loop checks if window is idle
     - Method to change window state
