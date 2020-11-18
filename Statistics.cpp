@@ -29,7 +29,7 @@ void Statistics::newStudent(int p){
     if (p > longestWait){
       longestWait = p;
     }
-    if(p >= 10){
+    if(p > 10){
       StudentLongWait++;
     }
     //Sort into list
@@ -45,7 +45,7 @@ void Statistics::newIdle(int d){
   if(d>longestIdle){
     longestIdle = d;
   }
-  if(d >= 5){
+  if(d > 5){
     longIdle++;
   }
 }

@@ -49,7 +49,7 @@ void A4run::simulate(){
   while (getline(myfile, y)){
     lineNum++;
   }
-  cout << "line num: " << lineNum << endl;
+  //cout << "line num: " << lineNum << endl;
   myfile.close();
   myfile.open (file, ios::in);
   //First line set up windows
@@ -61,10 +61,10 @@ void A4run::simulate(){
   //Gets next line of start time
   myfile >> line;
   lineNum--;
-  cout << "Start time is: " << line << endl;
+//  cout << "Start time is: " << line << endl;
   //Main loop
-  while(x<2 && clockTick < 25){
-    cout << " ============ Time: " << clockTick << " ============ " << endl;
+  while(x<2){
+    //cout << " ============ Time: " << clockTick << " ============ " << endl;
     openWindowNum = 0;
 
     //If statement checking time, if matches line, reads through next part of file
@@ -74,14 +74,14 @@ void A4run::simulate(){
       myfile >> line;
       lineNum--;
       f = line;
-      cout << f << " New Students" << endl;
+    //  cout << f << " New Students" << endl;
       //Creates a for loop iterating over the number of students gatehred from
       //The line, creating a new student with the appropriate line
       //Adds it to queue
       for (int i = 0; i < f; ++i){
         myfile >> line;
         lineNum--;
-        cout << "Student with "<< line << endl;
+      //  cout << "Student with "<< line << endl;
         Student s(clockTick, line);
         waitLine->Enqueue(s);
       }
@@ -89,14 +89,14 @@ void A4run::simulate(){
       // - close file
       //cout << "LineNum" << lineNum << endl;
       if (lineNum <= 0){
-        cout << "No more lines" << endl;
+      //  cout << "No more lines" << endl;
         line = 0;
         x++;
         myfile.close();
       } else {
         myfile >> line;
         lineNum--;
-        cout << "Next time is: " << line << endl;
+      //  cout << "Next time is: " << line << endl;
       }
     }
     //cout << "lineNum left: " << lineNum << endl;
@@ -109,61 +109,65 @@ void A4run::simulate(){
     //Finally, tick process time of all Students
     //and tick idle time of all open windows
     for (int i = 0; i < windowNum; ++i){
-      cout << "Window: " << i << " State: " << windows[i].getWindowState() << endl;
+      //cout << "Window: " << i << " State: " << windows[i].getWindowState() << endl;
       //If the window is full, check if student is done
       if (windows[i].getWindowState() && windows[i].getTime() <= 0) {
-        cout << "Student Finished" << endl;
+        //cout << "Student Finished" << endl;
         windows[i].changeWindowState();
         openWindowNum++;
+        //cout << "OW ++ " << endl;
         //when windows are all cleared x++ again
-        cout << "x: " << x << endl;
-        cout << waitLine->isEmpty() << endl;
-        cout <<openWindowNum<<endl;
-        if (x > 0 && openWindowNum >= windowNum && waitLine->isEmpty()){
-          cout << "Windows and queue cleared" << endl;
-          x++;
-          break;
-        }
+        //cout << "x: " << x << endl;
+        //cout << waitLine->isEmpty() << endl;
+        //cout <<openWindowNum<<endl;
+        // if (x > 0 && openWindowNum >= windowNum && waitLine->isEmpty()){
+        //   cout << "Windows and queue cleared" << endl;
+        //   x++;
+        //   break;
+        // }
         //Thus making x 2 and ending the loop
       }
       //If the window is empty and queue is not empty
       if (!windows[i].getWindowState() && !waitLine->isEmpty()){
-        cout << "arrival time: " << waitLine->peek().getArrivalTime() << endl;
-        cout << "wait time: " << clockTick - (waitLine->returnPos(0).getArrivalTime()) << endl;
+        //cout << "arrival time: " << waitLine->peek().getArrivalTime() << endl;
+        //cout << "wait time: " << clockTick - (waitLine->returnPos(0).getArrivalTime()) << endl;
         stats1->newStudent(clockTick - (waitLine->returnPos(0).getArrivalTime()));
         int ss = waitLine->Dequeue().getTime();
+        openWindowNum--;
+        //cout << "OW --" << endl;
 
         //Stats of student wait time
-        cout << "Student popped into window " << i << " with process time of " << ss << endl;
+        //cout << "Student popped into window " << i << " with process time of " << ss << endl;
         windows[i].nextStudent(ss);
 
       }
       //if the window is empty and noone in queue, tick idle
       else if (!windows[i].getWindowState()){
-        windows[i].tickIdleTime();
-        openWindowNum++;
-        cout << "Window is idle, tick: " << windows[i].getIdleTime() << endl;
         if (x > 0 && openWindowNum >= windowNum && waitLine->isEmpty()){
-          cout << "Windows and queue cleared" << endl;
+          //cout << "Windows and queue cleared" << endl;
           x++;
           break;
         }
+        windows[i].tickIdleTime();
+        openWindowNum++;
+        //cout << "OW ++ " << endl;
+        //cout << "Queue Empty, Window is idle, tick: " << windows[i].getIdleTime() << endl;
       }
 
       //Finally, If there is a student that is still processing, tick time
       if (windows[i].getWindowState()){
         windows[i].timeTick();
-        cout << "student at tick "  << windows[i].getTime() << endl;
+        //cout << "student at tick "  << windows[i].getTime() << endl;
       }
     }
-    cout << "OW: " << openWindowNum << endl;
+    //cout << "OW: " << openWindowNum << endl;
     //cout << "Num of Windows: " << windowNum << endl;
     //cout << "x: " << x << endl;
 
 
     //traverse through queue of students
     //tick wait time
-    cout << waitLine->getSize() << "Students in line" << endl;
+    //cout << waitLine->getSize() << "Students in line" << endl;
 
 
 
@@ -178,7 +182,7 @@ void A4run::simulate(){
     stats1->newIdle(windows[i].getIdleTime());
   }
   //And then print stats
-  //stats1->calculate();
+  stats1->calculate();
   cout << stats1->printStats() << endl;
 }
 void A4run::setUp(int d){
@@ -187,6 +191,6 @@ void A4run::setUp(int d){
   for(int i = 0; i < d; ++i){
     Window *w = new Window();
     windows[i] = *w;
-    cout << "new window" << endl;
+    //cout << "new window" << endl;
   }
 }
